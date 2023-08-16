@@ -35,7 +35,7 @@ class Game():
 
     def show_result(self, results):
         print(dedent(f"""
-                --|| {results[0]} || {results[1]} || {results[2]} ||--
+                  --|| {results[0]} || {results[1]} || {results[2]} ||--
               """))
 
 
@@ -53,11 +53,17 @@ class Game():
         self.player.reduce_money(1)
         self.machine.increase_money(1)
 
+        # Results
+        results = self.machine.get_symbols()
         # print results
-        self.show_result(self.machine.get_symbols())
+        self.show_result(results)
 
           #if win:
+        if machine.check_for_win(results):
+            print("Winner!")
             #player.increase_money()
+        else:
+            print("Not this time :(")
         # print player money
         pass
 

@@ -1,0 +1,25 @@
+Machine
+  - money
+  
+  - 3x reels
+    - 7 symbols on each
+  - winning_combos []
+
+  * reduce_money
+  * increase_money
+  * pull_handle
+  * get_results
+  * check_for_win
+
+
+Player 
+  - money
+  
+  - reduce_money
+  - increase_money
+
+{
+  'before': '£'
+  'symbol': '7'
+  'after': '$'
+}

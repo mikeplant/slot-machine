@@ -31,7 +31,7 @@ class Game():
                     symbols[0] == symbols[2]
                     ),
                 "prize": 2,
-                "type": "WIN" 
+                "type": "WIN"
             },
             {
                 "condition": (
@@ -78,7 +78,6 @@ class Game():
             self.player.reduce_money(1)
             self.machine.increase_money(1)
 
-            # Results
             results = self.machine.get_symbols()
             
             self.check_for_win(results)

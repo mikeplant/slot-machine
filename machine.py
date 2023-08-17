@@ -6,11 +6,7 @@ class Machine():
         self.reel = ['0', '?', '8', '£', '7', '$']
 
     def play(self):
-        # get 3 random symbols from self.reel
         self.get_symbols()
-
-        # check if win
-
     
     def get_symbols(self):
         symbols = []
@@ -19,7 +15,6 @@ class Machine():
             symbols.append(random.choice(self.reel))
 
         return symbols
-    
     
     def get_money(self):
         return self.money

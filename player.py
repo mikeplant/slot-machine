@@ -7,3 +7,6 @@ class Player():
     
     def reduce_money(self, amount):
         self.money -= amount
+
+    def increase_money(self, amount):
+        self.money += amount

@@ -20,15 +20,6 @@ class Machine():
 
         return symbols
     
-    def check_for_win(self, symbols):
-        winning_combos = [
-            (symbols[0] == symbols[1] and symbols[0] == symbols[2])
-        ]
-
-        if winning_combos[0]:
-            return True
-        else:
-            return False
     
     def get_money(self):
         return self.money

@@ -2,74 +2,93 @@ from textwrap import dedent
 
 from player import Player
 from machine import Machine
+from console_printer import ConsolePrinter
 
 class Game():
-    def __init__(self, player, machine):
+    def __init__(self, player, machine, printer):
         self.player = player
         self.machine = machine
+        self.printer = printer
+        self.state = {"prize": 0, "type": "LOSE"}
         self.start()
 
     def start(self):
-        print(dedent("""
-            Welcome to the One-Armed Bastard!
-                   _____________  
-                  
-                  ---------------  _
-                  | £ || £ || £ | ( )
-                  | 7 || 7 || 7 | //
-                  | $ || $ || $ | ||
-                  --------------- ||
-                  _______________//
-            
-            Type 'pull' to pull the lever or 'quit' to leave.       
-            """
-        ))
+        self.printer.welcome(self.player)
+        self.play()
+  
+    def reset_state(self):
+        self.state["prize"] = 0
+        self.state["type"] = "LOSE"
 
-        response = input("> ")
+    def check_for_win(self, symbols):
+        self.reset_state()
 
-        if response.lower() == 'pull':
-            self.play()
+        win_conditions = [
+            {
+                "condition": (
+                    symbols[0] == symbols[1] or 
+                    symbols[1] == symbols[2] or
+                    symbols[0] == symbols[2]
+                    ),
+                "prize": 2,
+                "type": "WIN" 
+            },
+            {
+                "condition": (
+                    symbols[0] == symbols[1] and 
+                    symbols[0] == symbols[2]
+                    ),
+                "prize": 5,
+                "type": "JACKPOT"
+            }
+        ]
+
+        for cond in win_conditions:
+            if cond["condition"]:
+                self.state["prize"] = cond["prize"]
+                self.state["type"] = cond["type"]
+          
+    def is_gameover(self):
+        if self.player.get_money() <= 0 or self.machine.get_money() <= 0:
+            return True
         else:
-            exit(0)
+            return False
 
-
-    def show_result(self, results):
-        print(dedent(f"""
-                  --|| {results[0]} || {results[1]} || {results[2]} ||--
-              """))
-
+    def get_winning_message(self):
+        if self.player.get_money() <= 0:
+            return "You're out of cash! You lose."
+        
+        if self.machine.get_money() <= 0:
+            return "You've drained the machine dry! You win."
 
     def play(self):
-        # check player has money
-        if self.player.get_money() <= 0:
-            # game_over(LOSE)
-            pass
+        while True:
+
+            if self.is_gameover():
+                self.printer.print_gameover(self.get_winning_message())
+                exit(0)
+
+            self.printer.play()
+
+            response = input("> ")
+
+            if response.lower() == 'quit':
+                exit(0)
+
+            self.player.reduce_money(1)
+            self.machine.increase_money(1)
+
+            # Results
+            results = self.machine.get_symbols()
+            
+            self.check_for_win(results)
+            self.player.increase_money(self.state["prize"])
+            self.printer.print_result(results, self.state, self.player)
         
-        # check machine has money
-        if self.machine.get_money() <= 0:
-            # game_over(WIN)
-            pass
-
-        self.player.reduce_money(1)
-        self.machine.increase_money(1)
-
-        # Results
-        results = self.machine.get_symbols()
-        # print results
-        self.show_result(results)
-
-          #if win:
-        if machine.check_for_win(results):
-            print("Winner!")
-            #player.increase_money()
-        else:
-            print("Not this time :(")
-        # print player money
-        pass
+        
 
 
-player = Player(10)
+player = Player(5)
 machine = Machine(300)
-game = Game(player, machine)
-
-# game.play()
+printer = ConsolePrinter()
+game = Game(player, machine, printer)

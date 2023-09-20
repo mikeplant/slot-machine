@@ -5,7 +5,7 @@ from colorist import bg_yellow, bg_green, bg_red, Color
 class ConsolePrinter():
     def welcome(self, player):
         print(dedent(f"""
-            Welcome to the One-Armed Bastard!
+            Welcome to the One-Armed Bandit!
                    _____________  
                   
                   ---------------  _
